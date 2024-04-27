@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Data
@@ -21,7 +22,7 @@ public class EntityResponseDto {
     public static class getAccountAllResponseDto{
         private int status;
         private String message;
-        private List<AccountAllDto> data;
+        private List<AccountDto> data;
     }
 
     @Getter
@@ -30,6 +31,22 @@ public class EntityResponseDto {
         private int status;
         private String message;
         private AccountDto data;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class postSend{
+        private int status;
+        private String message;
+        private BigInteger transactionId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class getTransactionOneResponseDto{
+        private int status;
+        private String message;
+        private TransactionDto data;
     }
 
 }

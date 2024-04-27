@@ -1,8 +1,6 @@
 package com.flab.tess.service;
 
 import com.flab.tess.domain.Account;
-import com.flab.tess.domain.User;
-import com.flab.tess.dto.AccountAllDto;
 import com.flab.tess.dto.AccountDto;
 import com.flab.tess.repository.AccountRepository;
 import com.flab.tess.repository.UserRepository;
@@ -29,15 +27,18 @@ public class AccountService {
         return accountDto;
     }
 
-    public AccountDto getAccountAll(){
-        AccountDto accountDto = (AccountDto) accountRepository.findAll();
-        return accountDto;
+    public List<AccountDto> getAccountAll(){
+        List<Account> accountList = accountRepository.findAll();
+
+        List<AccountDto> accountDtoList = new ArrayList<>();
+
+        for(Account account : accountList){
+            AccountDto accountDto = AccountDto.from(account);
+            accountDtoList.add(accountDto);
+        }
+
+        return accountDtoList;
     }
 
-//    public List<AccountAllDto> getAccountAll(BigInteger userId){
-//        Optional<User> user = userRepository.findById(userId);
-//        Account account = accountRepository.findByUser(user);
-//        List<AccountAllDto> result = new ArrayList<>();
-//        result.add(account);
-//    }
+
 }

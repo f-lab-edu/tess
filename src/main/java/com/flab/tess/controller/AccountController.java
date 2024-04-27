@@ -1,6 +1,5 @@
 package com.flab.tess.controller;
 
-import com.flab.tess.dto.AccountAllDto;
 import com.flab.tess.dto.AccountDto;
 import com.flab.tess.dto.EntityResponseDto;
 import com.flab.tess.service.AccountService;
@@ -19,15 +18,23 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/account")
-@RequiredArgsConstructor
+@RequiredArgsConstructor //생성자 자동주입
 public class AccountController {
 
     private final AccountService accountService;
 
-    //    @GetMapping()
-//    public EntityResponseDto.getAccountAllResponseDto getAccountAll(){
-//        List<AccountAllDto> responseData =
-//        return new EntityResponseDto.getAccountAllResponseDto(200,"모든 계좌 목록 조회 성공", )
+    //(1)
+    @GetMapping("/all")
+    public EntityResponseDto.getAccountAllResponseDto getAccountAll(){
+        List<AccountDto> responseData = accountService.getAccountAll();
+        return new EntityResponseDto.getAccountAllResponseDto(200,"모든 계좌 목록 조회 성공", responseData);
+    }
+
+//    //(2)
+//    @GetMapping("/balance")
+//    public EntityResponseDto.getAccountBalance getAccountAll(){
+//        List<AccountDto> responseData = accountService.getAccountAll();
+//        return new EntityResponseDto.getAccountAllResponseDto(200,"모든 계좌 목록 조회 성공", responseData);
 //    }
 
     //(3)

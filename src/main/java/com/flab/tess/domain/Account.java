@@ -16,12 +16,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="account_id")
+    @Column(name="account_id", columnDefinition = "BIGINT UNSIGNED")
     private BigInteger accountId;
 
     @ManyToOne
@@ -34,9 +33,12 @@ public class Account {
     @Column(name="account_name")
     private String accountName;
 
-    @ManyToOne
-    @JoinColumn(name="account_type_id")
-    private AccountType accountType;
+    @Column(name="account_type")
+    private String accountType;
+
+//    @ManyToOne
+//    @JoinColumn(name="account_type_id")
+//    private AccountType accountType;
 
     @Column(name="balance")
     private BigDecimal balance;
@@ -54,4 +56,16 @@ public class Account {
     //하나의 계좌는 여러개의 계좌내역을 가짐
     @OneToMany(mappedBy = "senderAccountId", cascade = CascadeType.ALL)
     private List<Transaction> sendList = new ArrayList<Transaction>();
+
+    // createdAt 필드를 현재 시간으로 설정
+    @PrePersist
+    public void createdAt() {
+        this.createdAt = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    //  pdatedAt 필드를 현재 시간으로 설정
+    @PreUpdate
+    public void updatedAt() {
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
+    }
 }

@@ -1,15 +1,42 @@
 ifndef::snippets[]
 :snippets: ../../build/generated-snippets
 endif::[]
-= API 명세서
+= TESS API 명세서
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
 :toclevels: 2
 :sectlinks:
+= Overview
+include::overview.adoc[]
 
 = API 목록
 
+[.title]
 == Account API
+
+[.subtitle]
+==== account API 요약
+계좌 관련 API에 대한 문서를 제공합니다.
+
+==== account API Endpoint
+계좌 전체 조회 엔드포인트: `/account/all` -GET
+
+계좌 상세 조회 엔드포인트: `/account/{accountId}` -GET
+
 include::account/account.adoc/[]
+
+
+
+== TransactionAPI
+[.subtitle]
+==== transaction API 요약
+거래 (송금 등) 관련 API에 대한 문서를 제공합니다.
+
+==== transaction API Endpoint
+송금 하기 엔드포인트: `/transaction/send` -POST
+
+거래 내역 조회 엔드포인트 : `/transaction/{transactionId}` -GET
+
+include::transaction/transaction.adoc[]

@@ -14,11 +14,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id", columnDefinition = "BIGINT UNSIGNED")
     private BigInteger userId;
 
     @Column(name="name")
@@ -36,5 +36,17 @@ public class User {
     //유저 입장에서 유저 한명이 많은 계좌를 가질 수 있음 1:N
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accountList = new ArrayList<Account>();
+
+    // createdAt 필드를 현재 시간으로 설정
+    @PrePersist
+    public void createdAt() {
+        this.createdAt = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    //  pdatedAt 필드를 현재 시간으로 설정
+    @PreUpdate
+    public void updatedAt() {
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
+    }
 
 }

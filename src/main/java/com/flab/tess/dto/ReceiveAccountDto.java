@@ -9,26 +9,20 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-@Getter
 @Setter
+@Getter
 @Builder
 @RequiredArgsConstructor
-public class AccountDto {
+public class ReceiveAccountDto {
 
     private final BigInteger accountId;
-
     private final String accountNum;
-    private final String accountName;
-    private final String accountType;
-    private final BigDecimal balance;
 
-    public static AccountDto from(Account account){
-        return AccountDto.builder()
+    public static ReceiveAccountDto from(Account account){
+        return ReceiveAccountDto.builder()
                 .accountId(account.getAccountId())
                 .accountNum(account.getAccountNum())
-                .accountName(account.getAccountName())
-                .accountType(account.getAccountType())
-                .balance(account.getBalance())
                 .build();
     }
+
 }

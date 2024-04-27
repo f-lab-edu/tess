@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, BigInteger>{
     Account findByUser(Optional<User> user);
+    Account findByAccountNum(String accountNum);
 }
