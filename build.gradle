@@ -1,0 +1,100 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+
+	//[spring rest docs] asciidocotr 플러그인
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+}
+
+group = 'com.flab'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '11'
+}
+
+configurations {
+	asciidoctorExt // asciidoctor 확장 기능 사용하기 위한 설정
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	runtimeOnly 'mysql:mysql-connector-java'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	/**
+	 * Test Implementation
+	 */
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// REST Docs Implementation 추가
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+// sinppetsDir 추가
+ext {
+	snippetsDir = file('build/genertated-snippets')
+}
+
+// test 할 때 snippestDir에 생성된 응답을 asciidoctor로 변환하여 .adoc 파일 생성
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+//asciidoctor를 사용하기 위해서 asciidoctor task에 asciidoctorExtensions 설정
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExt'
+	sources{
+		include("**/index.adoc")
+	}
+	baseDirFollowsSourceFile()
+	dependsOn test // 테스트 이후에 실행
+}
+
+asciidoctor.doFirst { // asciidoctor Task가 수행될 때 가장 먼저 수행 , 기존파일 삭제
+	delete file('src/main/resources/static/docs')
+}
+
+
+//asciidoctor task 실행시 생성된 html 파일을 src/main/resources/static/docs 디렉토리에 카피
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
+}
+
+//빌드 전 copyDocumnet task 실행
+build {
+	dependsOn copyDocument
+}
+
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from("${asciidoctor.outputDir}")
+		into 'src/main/resources/static/docs'
+	}
+}
+//bootJar {
+//	dependsOn copyDocument  // (10-1) bootJar 실행되기전 copyDocument task 실행
+//	//"build/docs/asciidoc"
+//	from file ("${asciidoctor.outputDir}")
+//	into file("build/resources/main/static")// static 앞에 /를 추가
+//}
+//	println(file("${asciidoctor.outputDir}")) // 경로 확인
+//	println(file('static/docs')) // 경로 확인

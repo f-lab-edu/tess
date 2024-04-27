@@ -1,0 +1,14 @@
+=== 계좌 조회 API
+
+=== HTTP Request
+include::{snippets}/get-account-one/http-request.adoc[]
+
+=== HTTP Request Parameters
+===== Path Parameters
+include::{snippets}/get-account-one/path-parameters.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/get-account-one/response-body.adoc[]
+include::{snippets}/get-account-one/response-fields.adoc[]
+
+
