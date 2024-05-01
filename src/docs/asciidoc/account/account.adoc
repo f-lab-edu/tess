@@ -1,29 +1,29 @@
 == 계좌 전체 조회 API
 
 === HTTP Request
-include::{snippets}/get-account-all/http-request.adoc[]
+include::{snippets}/get-accounts/http-request.adoc[]
 
 === HTTP Response Body
-include::{snippets}/get-account-all/http-response.adoc[]
+include::{snippets}/get-accounts/http-response.adoc[]
 
 === Response field
-include::{snippets}/get-account-all/response-fields.adoc[]
+include::{snippets}/get-accounts/response-fields.adoc[]
 
 
 
 == 계좌 상세 조회 API
 
 === HTTP Request
-include::{snippets}/get-account-one/http-request.adoc[]
+include::{snippets}/get-accounts-one/http-request.adoc[]
 
 === HTTP Request Parameters
 ===== Path Parameters
-include::{snippets}/get-account-one/path-parameters.adoc[]
+include::{snippets}/get-accounts-one/path-parameters.adoc[]
 
 === HTTP Response Body
-include::{snippets}/get-account-one/response-body.adoc[]
+include::{snippets}/get-accounts-one/response-body.adoc[]
 
 === Response field
-include::{snippets}/get-account-one/response-fields.adoc[]
+include::{snippets}/get-accounts-one/response-fields.adoc[]
 
 

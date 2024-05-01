@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,22 +23,16 @@ public class AccountService {
     private final UserRepository userRepository;
 
     public AccountDto getAccountOne(BigInteger accountId){
-        Optional<Account> account = accountRepository.findById(accountId);
-        AccountDto accountDto = AccountDto.from(account.get());
-        return accountDto;
+        return accountRepository.findById(accountId)
+                .map(AccountDto::from)
+                .orElse(null);
     }
 
     public List<AccountDto> getAccountAll(){
-        List<Account> accountList = accountRepository.findAll();
+        return accountRepository.findAll().stream()
+                .map(AccountDto::from)
+                .collect(Collectors.toList());
 
-        List<AccountDto> accountDtoList = new ArrayList<>();
-
-        for(Account account : accountList){
-            AccountDto accountDto = AccountDto.from(account);
-            accountDtoList.add(accountDto);
-        }
-
-        return accountDtoList;
     }
 
 

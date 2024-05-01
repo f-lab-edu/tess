@@ -1,15 +1,16 @@
 package com.flab.tess.controller;
 
 
-import com.flab.tess.dto.EntityResponseDto;
-import com.flab.tess.dto.SendDto;
+import com.flab.tess.dto.WithdrawResponseDto;
+import com.flab.tess.dto.WithdrawalRequestDto;
 import com.flab.tess.dto.TransactionDto;
-import com.flab.tess.service.AccountService;
 import com.flab.tess.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -25,20 +26,21 @@ public class TransactionController {
     private final TransactionService transactionService;
 //    private final AccountService accountService;
 
-
     //(1) 송금 하기
-    @PostMapping(value="/send", produces = "application/json; charset=UTF-8")
-    public EntityResponseDto.postSend postSend(@RequestBody SendDto sendDto){
-        BigInteger transactionId = transactionService.saveTransaction(sendDto);
-        return new EntityResponseDto.postSend(200, "송금 성공", transactionId);
+    @PostMapping(value="/send", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WithdrawResponseDto> withDraw(@RequestBody WithdrawalRequestDto withdrawalRequestDto){
+        WithdrawResponseDto withdrawResponseDto = transactionService.saveTransaction(withdrawalRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(withdrawResponseDto);
     }
 
     //(2) 거래 내역 상세 조회
     @GetMapping(value="/{transactionId}", produces = "application/json; charset=UTF-8")
-    public EntityResponseDto.getTransactionOneResponseDto getTransactionOne(@PathVariable("transactionId") String id){
+    public ResponseEntity<TransactionDto> getTransactionOne(@PathVariable("transactionId") String id){
         BigInteger transactionId = new BigInteger(id);
         TransactionDto transactionDto =transactionService.getTransaction(transactionId);
-        return new EntityResponseDto.getTransactionOneResponseDto(200,"거래 내역 상세 조회 성공", transactionDto);
+        return ResponseEntity.status(HttpStatus.OK).body(transactionDto);
     }
 
 }

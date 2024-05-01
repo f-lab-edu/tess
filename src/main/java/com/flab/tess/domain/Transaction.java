@@ -5,12 +5,10 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,24 +32,40 @@ public class Transaction {
     private BigDecimal amount;
 
     @Column(name="transaction_at")
-    private Timestamp transactionAt;
+    private LocalDateTime transactionAt;
 
     @Column(name="created_at")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name="updated_at")
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 
     // createdAt 필드를 현재 시간으로 설정
     @PrePersist
     public void createdAt() {
-        this.createdAt = Timestamp.valueOf(LocalDateTime.now());
+        this.createdAt = LocalDateTime.now();
     }
 
-    //  updatedAt 필드를 현재 시간으로 설정
+    // updatedAt 필드를 현재 시간으로 설정
     @PreUpdate
     public void updatedAt() {
-        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void transactionAt(LocalDateTime transactionAt){
+        this.transactionAt = transactionAt;
+    }
+
+    public void saveAmount(BigDecimal amount){
+        this.amount = amount;
+    }
+
+    public void saveReceiver(Account account){
+        this.receiverAccountId = account;
+    }
+
+    public void saveSender(Account account){
+        this.senderAccountId = account;
     }
 
 }
