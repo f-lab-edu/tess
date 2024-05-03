@@ -10,7 +10,6 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 @Builder
 public class TransactionDto {

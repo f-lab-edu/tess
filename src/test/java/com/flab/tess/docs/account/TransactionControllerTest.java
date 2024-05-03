@@ -40,14 +40,14 @@ public class TransactionControllerTest extends RestDocsTest {
     void 거래_내역_조회() throws Exception{
 
         //given
-        WithdrawalRequestDto withdrawalRequestDto = new WithdrawalRequestDto(BigInteger.valueOf(1), "123456", BigDecimal.valueOf(2000));
+        WithdrawalRequestDto testRequest = new WithdrawalRequestDto(BigInteger.valueOf(1), "123456",BigDecimal.valueOf(2000));
 
         AccountDto sender= new AccountDto(BigInteger.valueOf(1),"88888","OneTest","입출금",BigDecimal.valueOf(10000));
         ReceiveAccountDto receiver = new ReceiveAccountDto(BigInteger.valueOf(11), "123456");
 
         TransactionDto testTransactionDto = new TransactionDto(
                 BigInteger.valueOf(1),
-                withdrawalRequestDto.getAmount(),
+                testRequest.getAmount(),
                 LocalDateTime.now(),
                 sender,
                 receiver
@@ -86,7 +86,13 @@ public class TransactionControllerTest extends RestDocsTest {
     void 송금_하기() throws Exception{
 
         //given
-        WithdrawalRequestDto withdrawalRequestDto = new WithdrawalRequestDto(BigInteger.valueOf(1), "123456", BigDecimal.valueOf(2000));
+
+        WithdrawalRequestDto testRequestDto = WithdrawalRequestDto.builder()
+                .sendAccountId(BigInteger.valueOf(1))
+                .receiveAccountNum("123456")
+                .amount(BigDecimal.valueOf(2000))
+                .build();
+
         WithdrawResponseDto withdrawResponseDto = new WithdrawResponseDto(BigInteger.valueOf(1), BigDecimal.valueOf(2000));
 
         given(transactionService.saveTransaction(any(WithdrawalRequestDto.class))).willReturn(withdrawResponseDto);
@@ -94,7 +100,7 @@ public class TransactionControllerTest extends RestDocsTest {
         //when & then
         mockMvc.perform(RestDocumentationRequestBuilders
                 .post("/transaction/send")
-                .content( objectMapper.writeValueAsString(withdrawalRequestDto))
+                .content( objectMapper.writeValueAsString(testRequestDto))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(MockMvcResultHandlers.print())
