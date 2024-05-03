@@ -20,4 +20,14 @@ public class TransactionDto {
     private final AccountDto sender;
     private final ReceiveAccountDto receiver;
 
+    public static TransactionDto from(TransactionDto transactionDto){
+        return TransactionDto.builder()
+                .transactionId(transactionDto.getTransactionId())
+                .amount(transactionDto.getAmount())
+                .transactionAt(transactionDto.getTransactionAt())
+                .sender(transactionDto.getSender())
+                .receiver(transactionDto.getReceiver())
+                .build();
+    }
+
 }

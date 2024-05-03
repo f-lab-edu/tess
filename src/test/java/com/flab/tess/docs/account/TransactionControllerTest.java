@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -34,6 +36,51 @@ public class TransactionControllerTest extends RestDocsTest {
     @Override
     protected Object initializeController() {
         return new TransactionController(transactionService);
+    }
+
+    @Test
+    void 계좌별_전체_거래_내역_조회() throws Exception{
+
+        //given
+        AccountDto testSender = new AccountDto(BigInteger.valueOf(10),"123456","OneTest","입출금",BigDecimal.valueOf(10000));
+        ReceiveAccountDto testReceiver = new ReceiveAccountDto(BigInteger.valueOf(11),"77777");
+
+
+        //given
+        List<TransactionDto> testTransactions = new ArrayList<>();
+        testTransactions.add(new TransactionDto(
+                BigInteger.valueOf(1),
+                BigDecimal.valueOf(7777),
+                LocalDateTime.now(),
+                testSender,
+                testReceiver
+        ));
+
+        given(transactionService.getTransactionAll(BigInteger.valueOf(10))).willReturn(testTransactions);
+
+        //when&then
+        this.mockMvc.perform(
+                RestDocumentationRequestBuilders
+                .get("/transaction/accounts/{accountId}",10))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andDo(document("get-transaction-account",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(parameterWithName("accountId").description("계좌 id")),
+                        responseFields(
+                                fieldWithPath("[].transactionId").description("거래 내역 id"),
+                                fieldWithPath("[].amount").description("거래 금액"),
+                                fieldWithPath("[].transactionAt").description("거래 시간"),
+                                fieldWithPath("[].sender.accountId").description("계좌 id"),
+                                fieldWithPath("[].sender.accountNum").description("계좌 번호"),
+                                fieldWithPath("[].sender.accountName").description("계좌 이름"),
+                                fieldWithPath("[].sender.accountType").description("계좌 타입"),
+                                fieldWithPath("[].sender.balance").description("잔액"),
+                                fieldWithPath("[].receiver.accountId").description("상대 계좌 id"),
+                                fieldWithPath("[].receiver.accountNum").description("상대 계좌 번호")
+                        )));
+
     }
 
     @Test

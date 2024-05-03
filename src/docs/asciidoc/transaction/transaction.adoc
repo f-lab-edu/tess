@@ -27,3 +27,19 @@ include::{snippets}/get-transaction-one/http-response.adoc[]
 
 === Response field
 include::{snippets}/get-transaction-one/response-fields.adoc[]
+
+== 거래 내역 계좌별 전체 조회 API
+
+
+=== HTTP Request
+include::{snippets}/get-transaction-account/http-request.adoc[]
+
+=== HTTP Request Parameters
+===== Path Parameters
+include::{snippets}/get-transaction-account/path-parameters.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/get-transaction-account/http-response.adoc[]
+
+=== Response field
+include::{snippets}/get-transaction-account/response-fields.adoc[]
