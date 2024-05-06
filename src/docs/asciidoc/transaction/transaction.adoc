@@ -1,0 +1,45 @@
+== 송금 API
+
+=== HTTP Request
+include::{snippets}/send-transaction/http-request.adoc[]
+
+=== Request Body
+include::{snippets}/send-transaction/request-body.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/send-transaction/response-body.adoc[]
+
+=== Response field
+include::{snippets}/send-transaction/response-fields.adoc[]
+
+== 거래 내역 상세 조회 API
+
+
+=== HTTP Request
+include::{snippets}/get-transaction-one/http-request.adoc[]
+
+=== HTTP Request Parameters
+===== Path Parameters
+include::{snippets}/get-transaction-one/path-parameters.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/get-transaction-one/http-response.adoc[]
+
+=== Response field
+include::{snippets}/get-transaction-one/response-fields.adoc[]
+
+== 거래 내역 계좌별 전체 조회 API
+
+
+=== HTTP Request
+include::{snippets}/get-transaction-account/http-request.adoc[]
+
+=== HTTP Request Parameters
+===== Path Parameters
+include::{snippets}/get-transaction-account/path-parameters.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/get-transaction-account/http-response.adoc[]
+
+=== Response field
+include::{snippets}/get-transaction-account/response-fields.adoc[]

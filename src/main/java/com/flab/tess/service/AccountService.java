@@ -1,8 +1,6 @@
 package com.flab.tess.service;
 
 import com.flab.tess.domain.Account;
-import com.flab.tess.domain.User;
-import com.flab.tess.dto.AccountAllDto;
 import com.flab.tess.dto.AccountDto;
 import com.flab.tess.repository.AccountRepository;
 import com.flab.tess.repository.UserRepository;
@@ -14,6 +12,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,20 +23,17 @@ public class AccountService {
     private final UserRepository userRepository;
 
     public AccountDto getAccountOne(BigInteger accountId){
-        Optional<Account> account = accountRepository.findById(accountId);
-        AccountDto accountDto = AccountDto.from(account.get());
-        return accountDto;
+        return accountRepository.findById(accountId)
+                .map(AccountDto::from)
+                .orElse(null);
     }
 
-    public AccountDto getAccountAll(){
-        AccountDto accountDto = (AccountDto) accountRepository.findAll();
-        return accountDto;
+    public List<AccountDto> getAccountAll(){
+        return accountRepository.findAll().stream()
+                .map(AccountDto::from)
+                .collect(Collectors.toList());
+
     }
 
-//    public List<AccountAllDto> getAccountAll(BigInteger userId){
-//        Optional<User> user = userRepository.findById(userId);
-//        Account account = accountRepository.findByUser(user);
-//        List<AccountAllDto> result = new ArrayList<>();
-//        result.add(account);
-//    }
+
 }
