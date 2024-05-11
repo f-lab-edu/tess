@@ -13,26 +13,27 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class TransactionService {
 
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
-    private final UserRepository userRepository;
 
-    public WithdrawResponseDto saveTransaction(WithdrawalRequestDto withdrawalRequestDto){
+    @Transactional
+    public Transaction saveTransaction(WithdrawalRequestDto withdrawalRequestDto){
 
-        BigInteger sender = withdrawalRequestDto.getSendAccountId();
+        BigInteger sender = new BigInteger(withdrawalRequestDto.getSendAccountId());
         String receiveAccountNum = withdrawalRequestDto.getReceiveAccountNum();
-        BigDecimal amount = withdrawalRequestDto.getAmount();
+        BigDecimal amount = new BigDecimal(withdrawalRequestDto.getAmount());
+
+        System.out.println(sender);
+        System.out.println(receiveAccountNum);
+        System.out.println(amount);
 
         // 받는 사람의 계좌를 조회
         Account receiveAccount = accountRepository.findByAccountNum(receiveAccountNum)
@@ -43,56 +44,31 @@ public class TransactionService {
                 .orElseThrow(() -> new IllegalArgumentException("송신 계좌가 존재하지 않습니다."));
 
         //받는 사람, 보내는 사람 계좌 잔액 업데이트
-        receiveAccount.deposit(amount);
-        sendAccount.withdraw(amount);
+        Account proceedReceiveAccount = receiveAccount.deposit(amount);
+        Account proceedSenderAccount = sendAccount.withdraw(amount);
 
         //트랜잭션 객체 생성 및 초기화
-        Transaction transaction = new Transaction();
-        transaction.transactionAt(LocalDateTime.now());
-        transaction.saveAmount(amount);
-        transaction.saveReceiver(receiveAccount);
-        transaction.saveSender(sendAccount);
+        Transaction transaction = new Transaction()
+                .saveAmount(amount)
+                .saveReceiver(proceedReceiveAccount)
+                .saveSender(proceedSenderAccount);
 
         //트랜잭션 객체 DB에 저장
         transactionRepository.save(transaction);
 
-        WithdrawResponseDto withdrawResponseDto = new WithdrawResponseDto(transaction.getTransactionId(), transaction.getAmount());
-
-        return withdrawResponseDto;
+        return transaction;
     }
 
 
-    public TransactionDto getTransaction(BigInteger transactionId){
-        Transaction transaction = transactionRepository.findById(transactionId)
+    public Transaction getTransaction(BigInteger transactionId){
+        return transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new NoSuchElementException("Transaction not found with id: " + transactionId));
-
-        //보내는 사람 계좌
-        Account sender = transaction.getSenderAccountId();
-        AccountDto sendAccountDto = AccountDto.from(sender);
-
-        //받는 사람 계좌
-        Account receiver= transaction.getReceiverAccountId();
-        ReceiveAccountDto receiveAccountDto = ReceiveAccountDto.from(receiver);
-
-        TransactionDto transactionDto = new TransactionDto(transactionId, transaction.getAmount(), transaction.getTransactionAt(), sendAccountDto, receiveAccountDto);
-
-
-        return transactionDto;
     }
 
-    public List<TransactionDto> getTransactionAll(BigInteger accountId){
+    public List<Transaction> getTransactionAll(BigInteger accountId){
         Account sender = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NoSuchElementException("Account not found with id: " + accountId));;
-        List<Transaction> transactions = transactionRepository.findBySenderAccountId(sender);
-
-        return transactions.stream() // 리스트를 스트림으로 변환
-                .map(t -> { // 각 Transaction 객체를 TransactionDto로 변환
-                    AccountDto sendAccountDto = AccountDto.from(sender);
-                    Account receiver = t.getReceiverAccountId();
-                    ReceiveAccountDto receiveAccountDto = ReceiveAccountDto.from(receiver);
-                    return new TransactionDto(t.getTransactionId(), t.getAmount(), t.getTransactionAt(), sendAccountDto, receiveAccountDto);
-                })
-                .collect(Collectors.toList());
+        return transactionRepository.findBySenderAccountId(sender);
     }
 
 }

@@ -56,16 +56,19 @@ public class Transaction {
         this.transactionAt = transactionAt;
     }
 
-    public void saveAmount(BigDecimal amount){
+    public Transaction saveAmount(BigDecimal amount){
         this.amount = amount;
+        return this;
     }
 
-    public void saveReceiver(Account account){
+    public Transaction saveReceiver(Account account){
         this.receiverAccountId = account;
+        return this;
     }
 
-    public void saveSender(Account account){
+    public Transaction  saveSender(Account account){
         this.senderAccountId = account;
+        return this;
     }
 
 }
