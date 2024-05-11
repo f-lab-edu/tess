@@ -1,5 +1,6 @@
 package com.flab.tess.domain;
 
+import com.flab.tess.util.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class Account extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +38,6 @@ public class Account {
     @Column(name="balance")
     private BigDecimal balance;
 
-    @Column(name="created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name="updated_at")
-    private LocalDateTime updatedAt;
-
     //하나의 계좌는 여러개의 계좌내역을 가짐
     @OneToMany(mappedBy = "receiverAccountId", cascade = CascadeType.ALL)
     private List<Transaction> receiveList = new ArrayList<Transaction>();
@@ -50,18 +45,6 @@ public class Account {
     //하나의 계좌는 여러개의 계좌내역을 가짐
     @OneToMany(mappedBy = "senderAccountId", cascade = CascadeType.ALL)
     private List<Transaction> sendList = new ArrayList<Transaction>();
-
-    // createdAt 필드를 현재 시간으로 설정
-    @PrePersist
-    public void createdAt() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    //  pdatedAt 필드를 현재 시간으로 설정
-    @PreUpdate
-    public void updatedAt() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
     //잔액을 늘리는 메소드
     public Account deposit(BigDecimal amount){
