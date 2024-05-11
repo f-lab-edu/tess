@@ -1,5 +1,6 @@
 package com.flab.tess.domain;
 
+import com.flab.tess.util.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+public class Transaction extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,26 +35,9 @@ public class Transaction {
     @Column(name="transaction_at")
     private LocalDateTime transactionAt;
 
-    @Column(name="created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name="updated_at")
-    private LocalDateTime updatedAt;
-
-    // createdAt 필드를 현재 시간으로 설정
     @PrePersist
-    public void createdAt() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    // updatedAt 필드를 현재 시간으로 설정
-    @PreUpdate
-    public void updatedAt() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void transactionAt(LocalDateTime transactionAt){
-        this.transactionAt = transactionAt;
+    public void transactionAt() {
+        this.transactionAt = LocalDateTime.now();
     }
 
     public Transaction saveAmount(BigDecimal amount){
