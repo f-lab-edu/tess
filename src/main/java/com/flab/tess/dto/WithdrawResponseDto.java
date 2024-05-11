@@ -1,10 +1,10 @@
 package com.flab.tess.dto;
 
+import com.flab.tess.domain.Transaction;
+import com.flab.tess.util.CurrencyFormatter;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @Getter
@@ -12,5 +12,13 @@ import java.math.BigInteger;
 @RequiredArgsConstructor
 public class WithdrawResponseDto {
     private final BigInteger transactionId;
-    private final BigDecimal amount;
+    private final String amount;
+
+    public static WithdrawResponseDto from(Transaction transaction){
+        return WithdrawResponseDto.builder()
+                .transactionId(transaction.getTransactionId())
+                .amount(CurrencyFormatter.formatKRW(transaction.getAmount()))
+                .build();
+    }
+
 }

@@ -64,15 +64,17 @@ public class Account {
     }
 
     //잔액을 늘리는 메소드
-    public void deposit(BigDecimal amount){
+    public Account deposit(BigDecimal amount){
         this.balance = this.balance.add(amount);
+        return this;
     }
 
     //잔액 줄이는 메소드
-    public void withdraw(BigDecimal amount){
+    public Account withdraw(BigDecimal amount){
         //보내는 돈보다 현재 잔액이 많거나 같아야함
         if(this.balance.compareTo(amount)>=0){
             this.balance = this.balance.subtract(amount);
+            return this;
         }
         else{
             throw new IllegalArgumentException("잔액이 부족합니다.");

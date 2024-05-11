@@ -1,16 +1,16 @@
 == 송금 API
 
 === HTTP Request
-include::{snippets}/send-transaction/http-request.adoc[]
+include::{snippets}/withdraw-transaction/http-request.adoc[]
 
 === Request Body
-include::{snippets}/send-transaction/request-body.adoc[]
+include::{snippets}/withdraw-transaction/request-body.adoc[]
 
 === HTTP Response Body
-include::{snippets}/send-transaction/response-body.adoc[]
+include::{snippets}/withdraw-transaction/response-body.adoc[]
 
 === Response field
-include::{snippets}/send-transaction/response-fields.adoc[]
+include::{snippets}/withdraw-transaction/response-fields.adoc[]
 
 == 거래 내역 상세 조회 API
 
