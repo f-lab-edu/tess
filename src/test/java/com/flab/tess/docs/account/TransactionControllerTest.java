@@ -5,6 +5,7 @@ import com.flab.tess.docs.RestDocsTest;
 import com.flab.tess.domain.Account;
 import com.flab.tess.domain.Transaction;
 import com.flab.tess.dto.*;
+import com.flab.tess.service.CustomUserDetailService;
 import com.flab.tess.service.TransactionService;
 import org.junit.jupiter.api.Test;
 
@@ -32,10 +33,11 @@ import static org.mockito.BDDMockito.given;
 public class TransactionControllerTest extends RestDocsTest {
 
     private final TransactionService transactionService = mock(TransactionService.class);
+    private final CustomUserDetailService customUserDetailService = mock(CustomUserDetailService.class);
 
     @Override
     protected Object initializeController() {
-        return new TransactionController(transactionService);
+        return new TransactionController(transactionService, customUserDetailService);
     }
 
     @Test

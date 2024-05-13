@@ -1,6 +1,8 @@
 package com.flab.tess.domain;
 
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -21,6 +23,9 @@ public class User {
 
     @Column(name="name")
     private String name;
+
+    @Column(name="login_id")
+    private String loginId;
 
     @Column(name="password")
     private String password;
@@ -47,4 +52,12 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public User encodePassword(BCryptPasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(password);
+        return this;
+    }
+
+    public boolean checkPassword(BCryptPasswordEncoder passwordEncoder, String input_password) {
+        return passwordEncoder.matches(input_password, this.password);
+    }
 }

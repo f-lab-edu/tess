@@ -3,11 +3,13 @@ package com.flab.tess.controller;
 
 import com.flab.tess.domain.Transaction;
 import com.flab.tess.dto.*;
+import com.flab.tess.service.CustomUserDetailService;
 import com.flab.tess.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final CustomUserDetailService customUserDetailService;
+
 
     //(1) 송금 하기
     @PostMapping("/withdraw")
@@ -33,7 +37,8 @@ public class TransactionController {
 
     //(2) 거래 내역 상세 조회
     @GetMapping("/{transactionId}")
-    public TransactionResponseDto getTransactionOne(@PathVariable("transactionId") String id){
+    public TransactionResponseDto getTransactionOne(Principal principal, @PathVariable("transactionId") String id){
+        UserDto user = customUserDetailService.findUser(principal);
         BigInteger transactionId = new BigInteger(id);
         Transaction transaction = transactionService.getTransaction(transactionId);
         return TransactionResponseDto.from(transaction);
