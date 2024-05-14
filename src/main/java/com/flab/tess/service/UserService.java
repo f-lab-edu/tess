@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,18 +23,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserDto join(JoinRequest joinRequest){
+    public User join(User user){
 
-        User user = joinRequest.toEntity();
         User encodeUser = user.encodePassword(passwordEncoder);
         user = userRepository.save(encodeUser);
 
-        return UserDto.from(user);
+        return user;
     }
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public User login(LoginRequest loginRequest) {
         User user = userRepository.findByLoginId(loginRequest.getLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
 
@@ -42,13 +41,11 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
 
-        String accessToken = jwtTokenProvider.createToken(user.getLoginId());
-        BigInteger userId = user.getUserId();
-
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setUserId(userId);
-        loginResponse.setAccessToken(accessToken);
-        return loginResponse;
+        return user;
     }
+
+//    public User findUser(Principal principal){
+//        return userRepository.findByLoginId(principal.getName()).get();
+//    }
 
 }

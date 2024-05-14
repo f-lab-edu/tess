@@ -1,10 +1,11 @@
-package com.flab.tess.docs.account;
+package com.flab.tess.docs;
 
 import com.flab.tess.controller.AccountController;
-import com.flab.tess.docs.RestDocsTest;
 import com.flab.tess.domain.Account;
-import com.flab.tess.dto.AccountResponseDto;
+import com.flab.tess.domain.User;
 import com.flab.tess.service.AccountService;
+import com.flab.tess.service.CustomUserDetailService;
+import com.flab.tess.service.UserService;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -12,12 +13,10 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -33,38 +32,36 @@ import static org.mockito.BDDMockito.given;
 public class AccountControllerTest extends RestDocsTest {
 
     private final AccountService accountService = mock(AccountService.class);
+    private final CustomUserDetailService customUserDetailService = mock(CustomUserDetailService.class);
+
 
     @Override
     protected Object initializeController() {
-        return new AccountController(accountService);
+        return new AccountController(accountService, customUserDetailService);
     }
+
+    // Mock Principal
+    static Principal mockPrincipal = new Principal() {
+        @Override
+        public String getName() {
+            return "testUser";
+        }
+    };
 
     @Test
     void 전체_계좌_조회() throws Exception{
 
         //given
-        Account account1 = mock(Account.class);
-        Account account2 = mock(Account.class);
-
-        when(account1.getAccountId()).thenReturn(BigInteger.valueOf(11));
-        when(account1.getAccountNum()).thenReturn("123456");
-        when(account1.getAccountName()).thenReturn("선재 계좌");
-        when(account1.getAccountType()).thenReturn("입출금");
-        when(account1.getBalance()).thenReturn(BigDecimal.valueOf(10000));
-
-        when(account2.getAccountId()).thenReturn(BigInteger.valueOf(12));
-        when(account2.getAccountNum()).thenReturn("77777");
-        when(account2.getAccountName()).thenReturn("행운의 계좌");
-        when(account2.getAccountType()).thenReturn("입출금");
-        when(account2.getBalance()).thenReturn(BigDecimal.valueOf(777777));
-
-        given(accountService.getAccounts()).willReturn(Arrays.asList(account1, account2));
+        User testUser = createUser();
+        given(customUserDetailService.findUser(any(Principal.class))).willReturn(testUser);
+        List<Account> testAccounts = testUser.getAccountList();
+        given(accountService.getAccounts(testUser)).willReturn(testAccounts);
 
         //when & then
         this.mockMvc.perform(
-                get("/accounts"))
+                get("/accounts").principal(mockPrincipal))
                 .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith("application/json;charset=UTF-8"))
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(status().isOk())
                 //문서화
                 .andDo(document("get-accounts",
@@ -114,4 +111,31 @@ public class AccountControllerTest extends RestDocsTest {
     }
 
 
+
+    User createUser(){
+        User testUser = mock(User.class);
+        when(testUser .getUserId()).thenReturn(BigInteger.valueOf(1));
+        when(testUser .getLoginId()).thenReturn("testLoginId");
+        when(testUser .getName()).thenReturn("선재");
+
+        Account testAccount = mock(Account.class);
+        when(testAccount.getAccountId()).thenReturn(BigInteger.valueOf(11));
+        when(testAccount.getAccountNum()).thenReturn("123456");
+        when(testAccount.getAccountName()).thenReturn("선재 계좌");
+        when(testAccount.getAccountType()).thenReturn("입출금");
+        when(testAccount.getBalance()).thenReturn(BigDecimal.valueOf(10000));
+        when(testAccount.getUser()).thenReturn(testUser );
+
+        Account testAccount2 = mock(Account.class);
+        when(testAccount2 .getAccountId()).thenReturn(BigInteger.valueOf(12));
+        when(testAccount2 .getAccountNum()).thenReturn("77777");
+        when(testAccount2 .getAccountName()).thenReturn("행운의 계좌");
+        when(testAccount2 .getAccountType()).thenReturn("입출금");
+        when(testAccount2 .getBalance()).thenReturn(BigDecimal.valueOf(777777));
+        when(testAccount.getUser()).thenReturn(testUser );
+
+        when(testUser.getAccountList()).thenReturn(List.of(testAccount, testAccount2));
+
+        return testUser;
+    }
 }

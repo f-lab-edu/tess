@@ -20,9 +20,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserDto findUser(Principal principal){
+    public User findUser(Principal principal){
         User user = userRepository.findByLoginId(principal.getName()).get();
-        return UserDto.from(user);
+        return user;
     }
 
     @Override

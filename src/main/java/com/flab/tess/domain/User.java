@@ -40,9 +40,18 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accountList = new ArrayList<Account>();
 
-    // createdAt 필드를 현재 시간으로 설정
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
+
+    //엔티티 생성되기 전에 특정 필드들에 기본값 지정
     @PrePersist
-    public void createdAt() {
+    protected void onCreate() {
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+        this.enabled = true;
         this.createdAt = LocalDateTime.now();
     }
 
