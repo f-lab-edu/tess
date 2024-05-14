@@ -1,31 +1,30 @@
 package com.flab.tess.domain;
 
+import com.flab.tess.util.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table
-public class Transaction {
+public class Transaction extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="transaction_id")
+    @Column(name="transaction_id", columnDefinition = "BIGINT UNSIGNED")
     private BigInteger transactionId;
 
     @ManyToOne
     @JoinColumn(name="receiver_account_id", referencedColumnName = "account_id")
     private Account receiverAccountId;
 
+    //보내는 사람 = 나 = user
     @ManyToOne
     @JoinColumn(name="sender_account_id", referencedColumnName = "account_id")
     private Account senderAccountId;
@@ -34,12 +33,26 @@ public class Transaction {
     private BigDecimal amount;
 
     @Column(name="transaction_at")
-    private Timestamp transactionAt;
+    private LocalDateTime transactionAt;
 
-    @Column(name="created_at")
-    private Timestamp createdAt;
+    @PrePersist
+    public void transactionAt() {
+        this.transactionAt = LocalDateTime.now();
+    }
 
-    @Column(name="updated_at")
-    private Timestamp updatedAt;
+    public Transaction saveAmount(BigDecimal amount){
+        this.amount = amount;
+        return this;
+    }
+
+    public Transaction saveReceiver(Account account){
+        this.receiverAccountId = account;
+        return this;
+    }
+
+    public Transaction  saveSender(Account account){
+        this.senderAccountId = account;
+        return this;
+    }
 
 }

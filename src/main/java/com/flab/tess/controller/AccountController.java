@@ -1,43 +1,42 @@
 package com.flab.tess.controller;
 
-import com.flab.tess.dto.AccountAllDto;
-import com.flab.tess.dto.AccountDto;
-import com.flab.tess.dto.EntityResponseDto;
+import com.flab.tess.domain.Account;
+import com.flab.tess.dto.AccountResponseDto;
 import com.flab.tess.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * (1) 은행 계좌 목록 전체 조회 GET
- * (2) (1) 에서 전체 조회 할 때 전체 계좌의 잔액 조회 GET
- * (3) 개별 계좌별 거래 내역 상세 조회 GET
+ * (2) 개별 계좌별 거래 내역 상세 조회 GET
  */
 @RestController
-@RequestMapping("/account")
-@RequiredArgsConstructor
+@RequestMapping("/accounts")
+@RequiredArgsConstructor //생성자 자동주입
 public class AccountController {
 
     private final AccountService accountService;
 
-    //    @GetMapping()
-//    public EntityResponseDto.getAccountAllResponseDto getAccountAll(){
-//        List<AccountAllDto> responseData =
-//        return new EntityResponseDto.getAccountAllResponseDto(200,"모든 계좌 목록 조회 성공", )
-//    }
+    //(1)
+    @GetMapping
+    public List<AccountResponseDto> getAccounts(){
+        List<Account> accounts = accountService.getAccounts();
+        return accounts.stream()
+                .map(AccountResponseDto::from)
+                .collect(Collectors.toList());
+    }
 
-    //(3)
+    //(2)
     @GetMapping("/{accountId}")
-    public ResponseEntity<AccountDto> getAccount(@PathVariable("accountId") String id){
+    public AccountResponseDto getAccountOne(@PathVariable("accountId") String id){
         BigInteger accountId = new BigInteger(id);
-        AccountDto responseData = accountService.getAccountOne(accountId);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(responseData);
+        Account account = accountService.getAccountOne(accountId);
+        return AccountResponseDto.from(account);
     }
 }
 

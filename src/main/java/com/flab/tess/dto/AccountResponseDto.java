@@ -1,36 +1,33 @@
 package com.flab.tess.dto;
 
 import com.flab.tess.domain.Account;
-import com.flab.tess.domain.AccountType;
+import com.flab.tess.util.CurrencyFormatter;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
+
 @Getter
-@Setter
 @Builder
 @RequiredArgsConstructor
-public class AccountDto {
+public class AccountResponseDto{
 
     private final BigInteger accountId;
-
     private final String accountNum;
     private final String accountName;
-//    private final AccountType accountType;
-    private final BigDecimal balance;
+    private final String accountType;
+    private final String balance;
 
-
-    public static AccountDto from(Account account){
-        return AccountDto.builder()
+    public static AccountResponseDto from(Account account){
+        return AccountResponseDto.builder()
                 .accountId(account.getAccountId())
                 .accountNum(account.getAccountNum())
                 .accountName(account.getAccountName())
-//                .accountType(account.getAccountType())
-                .balance(account.getBalance())
+                .accountType(account.getAccountType())
+                .balance(CurrencyFormatter.formatKRW(account.getBalance()))
                 .build();
     }
+
+
 }
