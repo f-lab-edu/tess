@@ -16,6 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class User {
 
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id", columnDefinition = "BIGINT UNSIGNED")
@@ -61,12 +63,12 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public User encodePassword(BCryptPasswordEncoder passwordEncoder){
+    public User encodePassword(){
         this.password = passwordEncoder.encode(password);
         return this;
     }
 
-    public boolean checkPassword(BCryptPasswordEncoder passwordEncoder, String input_password) {
+    public boolean checkPassword(String input_password) {
         return passwordEncoder.matches(input_password, this.password);
     }
 }
