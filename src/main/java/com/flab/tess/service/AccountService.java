@@ -1,14 +1,13 @@
 package com.flab.tess.service;
 
 import com.flab.tess.domain.Account;
-import com.flab.tess.dto.AccountResponseDto;
+import com.flab.tess.domain.User;
 import com.flab.tess.repository.AccountRepository;
 import com.flab.tess.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,8 +21,8 @@ public class AccountService {
         return accountRepository.findById(accountId).orElse(null);
     }
 
-    public List<Account> getAccounts(){
-        return new ArrayList<>(accountRepository.findAll());
+    public List<Account> getAccounts(User user){
+        return accountRepository.findByUser(user);
     }
 
 

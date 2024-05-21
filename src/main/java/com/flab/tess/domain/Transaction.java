@@ -24,10 +24,15 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name="receiver_account_id", referencedColumnName = "account_id")
     private Account receiverAccountId;
 
-    //보내는 사람 = 나 = user
     @ManyToOne
     @JoinColumn(name="sender_account_id", referencedColumnName = "account_id")
     private Account senderAccountId;
+
+    @Column
+    private BigDecimal receiverBalance;
+
+    @Column
+    private BigDecimal senderBalance;
 
     @Column
     private BigDecimal amount;
@@ -40,19 +45,14 @@ public class Transaction extends BaseEntity {
         this.transactionAt = LocalDateTime.now();
     }
 
-    public Transaction saveAmount(BigDecimal amount){
+    public Transaction saveTransaction(BigDecimal amount, Account receiverAccount, Account senderAccount, BigDecimal receiverBalance, BigDecimal senderBalance){
         this.amount = amount;
+        this.receiverAccountId = receiverAccount;
+        this.senderAccountId = senderAccount;
+        this.receiverBalance = receiverBalance;
+        this.senderBalance = senderBalance;
         return this;
     }
 
-    public Transaction saveReceiver(Account account){
-        this.receiverAccountId = account;
-        return this;
-    }
-
-    public Transaction  saveSender(Account account){
-        this.senderAccountId = account;
-        return this;
-    }
 
 }

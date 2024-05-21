@@ -11,7 +11,8 @@ import java.math.BigInteger;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public class AccountResponseDto{
+//user(본인)의 계좌 정보
+public class AccountResponse {
 
     private final BigInteger accountId;
     private final String accountNum;
@@ -19,8 +20,8 @@ public class AccountResponseDto{
     private final String accountType;
     private final String balance;
 
-    public static AccountResponseDto from(Account account){
-        return AccountResponseDto.builder()
+    public static AccountResponse from(Account account){
+        return AccountResponse.builder()
                 .accountId(account.getAccountId())
                 .accountNum(account.getAccountNum())
                 .accountName(account.getAccountName())
