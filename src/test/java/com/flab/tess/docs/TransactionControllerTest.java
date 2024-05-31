@@ -141,6 +141,30 @@ public class TransactionControllerTest extends RestDocsTest {
 
     }
 
+    @Test
+    void 최근_송금_내역_조회() throws Exception{
+
+        List<Transaction> mockTransactions = createTransactions();
+
+        given(transactionService.getTransactionDeposit(BigInteger.valueOf(11))).willReturn(Collections.singletonList(mockTransactions.get(0)));
+
+        //when&then
+        this.mockMvc.perform(
+                RestDocumentationRequestBuilders
+                        .get("/transactions/withdraw/{accountId}",11))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andDo(document("get-recent-withdraw",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(parameterWithName("accountId").description("계좌 id")),
+                        responseFields(
+                                fieldWithPath("[].userName").description("최근 송금 보낸 유저 이름").type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("[].accountNum").description("최근 송금 보낸 계좌 번호").type(JsonFieldType.STRING).optional()
+                        )));
+
+    }
+
 
     List<Transaction> createTransactions(){
 
