@@ -6,8 +6,10 @@ import com.flab.tess.domain.User;
 import com.flab.tess.service.AccountService;
 import com.flab.tess.service.CustomUserDetailService;
 import com.flab.tess.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.MockitoAnnotations;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 
@@ -17,6 +19,8 @@ import java.security.Principal;
 import java.util.List;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -34,25 +38,15 @@ public class AccountControllerTest extends RestDocsTest {
     private final AccountService accountService = mock(AccountService.class);
     private final CustomUserDetailService customUserDetailService = mock(CustomUserDetailService.class);
 
-
     @Override
     protected Object initializeController() {
         return new AccountController(accountService, customUserDetailService);
     }
 
-    // Mock Principal
-    static Principal mockPrincipal = new Principal() {
-        @Override
-        public String getName() {
-            return "testUser";
-        }
-    };
-
     @Test
     void 전체_계좌_조회() throws Exception{
 
         //given
-        User testUser = createUser();
         given(customUserDetailService.findUser(any(Principal.class))).willReturn(testUser);
         List<Account> testAccounts = testUser.getAccountList();
         given(accountService.getAccounts(testUser)).willReturn(testAccounts);
@@ -81,12 +75,7 @@ public class AccountControllerTest extends RestDocsTest {
     void 개별_계좌_상세_조회() throws Exception{
 
         //given
-        Account account = mock(Account.class);
-        when(account.getAccountId()).thenReturn(BigInteger.valueOf(12));
-        when(account.getAccountNum()).thenReturn("77777");
-        when(account.getAccountName()).thenReturn("행운의 계좌");
-        when(account.getAccountType()).thenReturn("입출금");
-        when(account.getBalance()).thenReturn(BigDecimal.valueOf(777777));
+        Account account = testUser.getAccountList().get(1);
 
         given(accountService.getAccountOne(BigInteger.valueOf(12))).willReturn(account);
 
@@ -110,32 +99,4 @@ public class AccountControllerTest extends RestDocsTest {
                         )));
     }
 
-
-
-    User createUser(){
-        User testUser = mock(User.class);
-        when(testUser .getUserId()).thenReturn(BigInteger.valueOf(1));
-        when(testUser .getLoginId()).thenReturn("testLoginId");
-        when(testUser .getName()).thenReturn("선재");
-
-        Account testAccount = mock(Account.class);
-        when(testAccount.getAccountId()).thenReturn(BigInteger.valueOf(11));
-        when(testAccount.getAccountNum()).thenReturn("123456");
-        when(testAccount.getAccountName()).thenReturn("선재 계좌");
-        when(testAccount.getAccountType()).thenReturn("입출금");
-        when(testAccount.getBalance()).thenReturn(BigDecimal.valueOf(10000));
-        when(testAccount.getUser()).thenReturn(testUser );
-
-        Account testAccount2 = mock(Account.class);
-        when(testAccount2 .getAccountId()).thenReturn(BigInteger.valueOf(12));
-        when(testAccount2 .getAccountNum()).thenReturn("77777");
-        when(testAccount2 .getAccountName()).thenReturn("행운의 계좌");
-        when(testAccount2 .getAccountType()).thenReturn("입출금");
-        when(testAccount2 .getBalance()).thenReturn(BigDecimal.valueOf(777777));
-        when(testAccount.getUser()).thenReturn(testUser );
-
-        when(testUser.getAccountList()).thenReturn(List.of(testAccount, testAccount2));
-
-        return testUser;
-    }
 }
