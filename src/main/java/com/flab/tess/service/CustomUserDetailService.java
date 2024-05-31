@@ -21,8 +21,8 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     public User findUser(Principal principal){
-        User user = userRepository.findByLoginId(principal.getName()).get();
-        return user;
+        return userRepository.findByLoginId(principal.getName())
+                .orElseThrow(()-> new UsernameNotFoundException("사용자를 찾을 수 없습니다"));
     }
 
     @Override

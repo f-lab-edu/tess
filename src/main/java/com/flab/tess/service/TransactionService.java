@@ -46,10 +46,13 @@ public class TransactionService {
         Account proceedSenderAccount = sendAccount.withdraw(amount);
 
         //트랜잭션 객체 생성 및 초기화
-        Transaction transaction = new Transaction().saveTransaction(
+        Transaction transaction = Transaction.of(
                 amount,
-                proceedReceiveAccount, proceedSenderAccount,
-                proceedReceiveAccount.getBalance(), proceedSenderAccount.getBalance());
+                proceedReceiveAccount,
+                proceedSenderAccount,
+                proceedReceiveAccount.getBalance(),
+                proceedSenderAccount.getBalance()
+        );
 
         //트랜잭션 객체 DB에 저장
         transactionRepository.save(transaction);

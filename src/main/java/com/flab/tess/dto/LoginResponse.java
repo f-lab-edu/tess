@@ -4,14 +4,11 @@ import lombok.*;
 
 import java.math.BigInteger;
 
-@Builder
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
 
-    private  String accessToken;
-    private  BigInteger userId;
+    private final String accessToken;
+    private final BigInteger userId;
 
 }

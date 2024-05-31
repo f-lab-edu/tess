@@ -33,10 +33,7 @@ public class AuthController {
     public LoginResponse login(@RequestBody LoginRequest loginRequest){
         User user = userService.login(loginRequest);
         String accessToken = jwtTokenProvider.createToken(user.getLoginId());
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setUserId(user.getUserId());
-        loginResponse.setAccessToken(accessToken);
-        return loginResponse;
+        return new LoginResponse(accessToken, user.getUserId());
     }
 
 
