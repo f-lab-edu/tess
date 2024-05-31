@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
