@@ -56,14 +56,5 @@ public class Transaction extends BaseEntity {
                 LocalDateTime.now() // 생성 시 현재 시간으로 설정
         );
     }
-//    public Transaction saveTransaction(BigDecimal amount, Account receiverAccount, Account senderAccount, BigDecimal receiverBalance, BigDecimal senderBalance){
-//        this.amount = amount;
-//        this.receiverAccountId = receiverAccount;
-//        this.senderAccountId = senderAccount;
-//        this.receiverBalance = receiverBalance;
-//        this.senderBalance = senderBalance;
-//        return this;
-//    }
-
 
 }

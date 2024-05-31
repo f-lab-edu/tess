@@ -45,7 +45,7 @@ public class TransactionService {
         Account proceedReceiveAccount = receiveAccount.deposit(amount);
         Account proceedSenderAccount = sendAccount.withdraw(amount);
 
-        //트랜잭션 객체 생성 및 초기화
+        //of 팩토리 메서드를 통해 트랜잭션 객체 생성 및 초기화를 하나의 정적 메소드에서 캡슐화해서 진행
         Transaction transaction = Transaction.of(
                 amount,
                 proceedReceiveAccount,
