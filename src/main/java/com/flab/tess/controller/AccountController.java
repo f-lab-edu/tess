@@ -1,13 +1,17 @@
 package com.flab.tess.controller;
 
 import com.flab.tess.domain.Account;
-import com.flab.tess.dto.AccountResponseDto;
+import com.flab.tess.domain.User;
+import com.flab.tess.dto.AccountResponse;
 import com.flab.tess.service.AccountService;
+import com.flab.tess.service.CustomUserDetailService;
+import com.flab.tess.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,22 +25,25 @@ import java.util.stream.Collectors;
 public class AccountController {
 
     private final AccountService accountService;
+//    private final UserService userService;
+    private final CustomUserDetailService customUserDetailService;
 
     //(1)
     @GetMapping
-    public List<AccountResponseDto> getAccounts(){
-        List<Account> accounts = accountService.getAccounts();
+    public List<AccountResponse> getAccounts(Principal principal){
+        User user = customUserDetailService.findUser(principal);
+        List<Account> accounts = accountService.getAccounts(user);
         return accounts.stream()
-                .map(AccountResponseDto::from)
+                .map(AccountResponse::from)
                 .collect(Collectors.toList());
     }
 
     //(2)
     @GetMapping("/{accountId}")
-    public AccountResponseDto getAccountOne(@PathVariable("accountId") String id){
+    public AccountResponse getAccountOne(@PathVariable("accountId") String id){
         BigInteger accountId = new BigInteger(id);
         Account account = accountService.getAccountOne(accountId);
-        return AccountResponseDto.from(account);
+        return AccountResponse.from(account);
     }
 }
 

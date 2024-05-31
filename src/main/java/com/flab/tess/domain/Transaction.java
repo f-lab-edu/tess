@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction extends BaseEntity {
@@ -24,10 +23,15 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name="receiver_account_id", referencedColumnName = "account_id")
     private Account receiverAccountId;
 
-    //보내는 사람 = 나 = user
     @ManyToOne
     @JoinColumn(name="sender_account_id", referencedColumnName = "account_id")
     private Account senderAccountId;
+
+    @Column
+    private BigDecimal receiverBalance;
+
+    @Column
+    private BigDecimal senderBalance;
 
     @Column
     private BigDecimal amount;
@@ -40,19 +44,17 @@ public class Transaction extends BaseEntity {
         this.transactionAt = LocalDateTime.now();
     }
 
-    public Transaction saveAmount(BigDecimal amount){
-        this.amount = amount;
-        return this;
-    }
-
-    public Transaction saveReceiver(Account account){
-        this.receiverAccountId = account;
-        return this;
-    }
-
-    public Transaction  saveSender(Account account){
-        this.senderAccountId = account;
-        return this;
+    // 팩토리 메소드
+    public static Transaction of(BigDecimal amount, Account receiverAccount, Account senderAccount, BigDecimal receiverBalance, BigDecimal senderBalance) {
+        return new Transaction(
+                null, // transactionId는 자동 생성
+                receiverAccount,
+                senderAccount,
+                receiverBalance,
+                senderBalance,
+                amount,
+                LocalDateTime.now() // 생성 시 현재 시간으로 설정
+        );
     }
 
 }

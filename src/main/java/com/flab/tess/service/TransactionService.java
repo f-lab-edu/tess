@@ -2,6 +2,7 @@ package com.flab.tess.service;
 
 import com.flab.tess.domain.Account;
 import com.flab.tess.domain.Transaction;
+import com.flab.tess.domain.User;
 import com.flab.tess.dto.*;
 import com.flab.tess.repository.AccountRepository;
 import com.flab.tess.repository.TransactionRepository;
@@ -15,6 +16,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +33,6 @@ public class TransactionService {
         String receiveAccountNum = withdrawalRequestDto.getReceiveAccountNum();
         BigDecimal amount = new BigDecimal(withdrawalRequestDto.getAmount());
 
-        System.out.println(sender);
-        System.out.println(receiveAccountNum);
-        System.out.println(amount);
-
         // 받는 사람의 계좌를 조회
         Account receiveAccount = accountRepository.findByAccountNum(receiveAccountNum)
                 .orElseThrow(() -> new IllegalArgumentException("수신 계좌가 존재하지 않습니다."));
@@ -47,11 +45,14 @@ public class TransactionService {
         Account proceedReceiveAccount = receiveAccount.deposit(amount);
         Account proceedSenderAccount = sendAccount.withdraw(amount);
 
-        //트랜잭션 객체 생성 및 초기화
-        Transaction transaction = new Transaction()
-                .saveAmount(amount)
-                .saveReceiver(proceedReceiveAccount)
-                .saveSender(proceedSenderAccount);
+        //of 팩토리 메서드를 통해 트랜잭션 객체 생성 및 초기화를 하나의 정적 메소드에서 캡슐화해서 진행
+        Transaction transaction = Transaction.of(
+                amount,
+                proceedReceiveAccount,
+                proceedSenderAccount,
+                proceedReceiveAccount.getBalance(),
+                proceedSenderAccount.getBalance()
+        );
 
         //트랜잭션 객체 DB에 저장
         transactionRepository.save(transaction);
@@ -65,10 +66,18 @@ public class TransactionService {
                 .orElseThrow(() -> new NoSuchElementException("Transaction not found with id: " + transactionId));
     }
 
-    public List<Transaction> getTransactionAll(BigInteger accountId){
-        Account sender = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NoSuchElementException("Account not found with id: " + accountId));;
-        return transactionRepository.findBySenderAccountId(sender);
+    //sender가 user인 내역
+    public List<Transaction> getTransactionDeposit(BigInteger accountId){
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NoSuchElementException("Account not found with id: " + accountId));
+        return transactionRepository.findBySenderAccountId(account);
+    }
+
+    //receiver가 user인 내역
+    public List<Transaction> getTransactionWithdraw(BigInteger accountId){
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NoSuchElementException("Account not found with id: " + accountId));
+        return transactionRepository.findByReceiverAccountId(account);
     }
 
 }
