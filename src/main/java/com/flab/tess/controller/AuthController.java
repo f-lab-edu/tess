@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/join")
     public UserDto join(@RequestBody JoinRequest joinRequest){
-        User user = userService.join(joinRequest.toEntity());
+        User user = userService.join(joinRequest);
         return UserDto.from(user);
     }
 

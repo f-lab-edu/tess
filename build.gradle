@@ -122,7 +122,6 @@ jacocoTestReport {
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, excludes: [
-					'**/domain',
 					'**/dto',
 					'**/filter',
 					'**/util',
@@ -142,7 +141,6 @@ jacocoTestCoverageVerification {
 
 			// 제외할 클래스들
 			excludes = [
-					'**/domain',
 					'**/dto',
 					'**/filter',
 					'**/util',

@@ -1,3 +1,17 @@
+== 계좌 생성 API
+
+=== HTTP Request
+include::{snippets}/create-account/http-request.adoc[]
+
+=== Request Body
+include::{snippets}/create-account/request-body.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/create-account/response-body.adoc[]
+
+=== Response field
+include::{snippets}/create-account/response-fields.adoc[]
+
 == 계좌 전체 조회 API
 
 === HTTP Request

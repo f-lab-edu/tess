@@ -1,0 +1,28 @@
+== 회원가입 API
+
+=== HTTP Request
+include::{snippets}/join/http-request.adoc[]
+
+=== Request Body
+include::{snippets}/join/request-body.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/join/response-body.adoc[]
+
+=== Response field
+include::{snippets}/join/response-fields.adoc[]
+
+
+== 로그인 API
+
+=== HTTP Request
+include::{snippets}/login/http-request.adoc[]
+
+=== Request Body
+include::{snippets}/login/request-body.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/login/response-body.adoc[]
+
+=== Response field
+include::{snippets}/login/response-fields.adoc[]
