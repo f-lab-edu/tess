@@ -15,4 +15,5 @@ public class AccountCreateRequest {
     private String accountName;
     private String accountType;
 
+
 }
