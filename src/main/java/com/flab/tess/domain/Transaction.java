@@ -45,17 +45,15 @@ public class Transaction extends BaseEntity {
         this.transactionAt = LocalDateTime.now();
     }
 
-    // 팩토리 메소드
+    // 팩토리 메소드+빌더 패턴
     public static Transaction of(BigDecimal amount, Account receiverAccount, Account senderAccount, BigDecimal receiverBalance, BigDecimal senderBalance) {
-        return new Transaction(
-                null, // transactionId는 자동 생성
-                receiverAccount,
-                senderAccount,
-                receiverBalance,
-                senderBalance,
-                amount,
-                LocalDateTime.now() // 생성 시 현재 시간으로 설정
-        );
+        return Transaction.builder()
+                .amount(amount)
+                .receiverAccountId(receiverAccount)
+                .senderAccountId(senderAccount)
+                .receiverBalance(receiverBalance)
+                .senderBalance(senderBalance)
+                .build();
     }
 
 }

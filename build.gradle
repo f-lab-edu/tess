@@ -5,6 +5,8 @@ plugins {
 
 	//[spring rest docs] asciidocotr 플러그인
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+
+	id 'jacoco'
 }
 
 group = 'com.flab'
@@ -48,6 +50,11 @@ dependencies {
 	// REST Docs Implementation 추가
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
+
+	//cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'com.github.ben-manes.caffeine:caffeine:2.9.1'
 }
 
 // sinppetsDir 추가
@@ -96,11 +103,68 @@ bootJar {
 		into 'src/main/resources/static/docs'
 	}
 }
-//bootJar {
-//	dependsOn copyDocument  // (10-1) bootJar 실행되기전 copyDocument task 실행
-//	//"build/docs/asciidoc"
-//	from file ("${asciidoctor.outputDir}")
-//	into file("build/resources/main/static")// static 앞에 /를 추가
-//}
-//	println(file("${asciidoctor.outputDir}")) // 경로 확인
-//	println(file('static/docs')) // 경로 확인
+
+// JaCoCo 설정 추가
+jacoco {
+	toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		csv.required = false
+		xml.required = false
+		html.required = true
+
+		html.destination file("jacoco/jacocoHtml")
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, excludes: [
+					'**/domain',
+					'**/dto',
+					'**/filter',
+					'**/util',
+					'**/config',
+					'**/provider',
+					'**/service'
+			])
+		}))
+	}
+}
+
+jacocoTestCoverageVerification {
+	// 커버리지의 범위와 퍼센테이지를 설정합니다.
+	violationRules {
+		rule {
+			element = 'CLASS'		// class 단위로 룰을 체크합니다.
+
+			// 제외할 클래스들
+			excludes = [
+					'**/domain',
+					'**/dto',
+					'**/filter',
+					'**/util',
+					'**/config',
+					'**/provider',
+					'**/service'
+			]
+
+			// 브랜치 커버리지의 최소값을 설정합니다.
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.50
+			}
+		}
+	}
+}
+
+tasks.named('test') {
+	finalizedBy jacocoTestReport // 테스트 후에 커버리지 리포트를 생성하도록 설정
+}
+
+tasks.named('check') {
+	dependsOn jacocoTestCoverageVerification
+}
