@@ -27,13 +27,11 @@ public class AccountService {
         return accountRepository.findById(accountId).orElse(null);
     }
 
-    @Cacheable(value = "accounts", key = "#user.userId")
     public List<Account> getAccounts(User user){
         return accountRepository.findByUser(user);
     }
 
     @Transactional
-    @CacheEvict(value = "accounts", key = "#user.userId")
     public Account saveAccount(AccountCreateRequest accountCreateRequest, User user){
         Account account = Account.of(
                 user,
