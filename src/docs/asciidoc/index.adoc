@@ -14,6 +14,19 @@ include::overview.adoc[]
 = API 목록
 
 [.title]
+== Auth API
+[.subtitle]
+==== auth API 요약
+유저 관련 API에 대한 문서를 제공합니다.
+
+==== auth API Endpoint
+
+회원가입 엔드포인트: `/auth/join` -POST
+
+로그인 엔드포인트: `/auth/login` -POST
+
+include::auth/auth.adoc/[]
+
 == Account API
 
 [.subtitle]
@@ -21,6 +34,9 @@ include::overview.adoc[]
 계좌 관련 API에 대한 문서를 제공합니다.
 
 ==== account API Endpoint
+
+계좌 생성 엔드포인트: `/accounts` -POST
+
 계좌 전체 조회 엔드포인트: `/accounts` -GET
 
 계좌 상세 조회 엔드포인트: `/accounts/{accountId}` -GET

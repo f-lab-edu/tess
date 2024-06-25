@@ -1,6 +1,7 @@
 package com.flab.tess.service;
 
 import com.flab.tess.domain.User;
+import com.flab.tess.dto.JoinRequest;
 import com.flab.tess.dto.LoginRequest;
 import com.flab.tess.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User join(User user){
+    public User join(JoinRequest joinRequest){
 
+        User user = joinRequest.toEntity();
         User encodeUser = user.encodePassword();
         user = userRepository.save(encodeUser);
 

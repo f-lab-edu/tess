@@ -51,10 +51,9 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
-
 	//cache
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
-	implementation 'com.github.ben-manes.caffeine:caffeine:2.9.1'
 }
 
 // sinppetsDir 추가
@@ -122,7 +121,6 @@ jacocoTestReport {
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, excludes: [
-					'**/domain',
 					'**/dto',
 					'**/filter',
 					'**/util',
@@ -142,7 +140,6 @@ jacocoTestCoverageVerification {
 
 			// 제외할 클래스들
 			excludes = [
-					'**/domain',
 					'**/dto',
 					'**/filter',
 					'**/util',

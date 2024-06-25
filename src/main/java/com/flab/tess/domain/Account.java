@@ -78,4 +78,5 @@ public class Account extends BaseEntity {
                 .accountType(accountType)
                 .build();
     }
+
 }

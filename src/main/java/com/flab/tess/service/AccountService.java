@@ -6,6 +6,7 @@ import com.flab.tess.dto.AccountCreateRequest;
 import com.flab.tess.repository.AccountRepository;
 import com.flab.tess.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,6 @@ public class AccountService {
         return accountRepository.findById(accountId).orElse(null);
     }
 
-    @Cacheable("accounts")
     public List<Account> getAccounts(User user){
         return accountRepository.findByUser(user);
     }
@@ -42,5 +42,6 @@ public class AccountService {
         accountRepository.save(account);
         return account;
     }
+
 
 }
