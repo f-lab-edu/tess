@@ -1,5 +1,7 @@
 package com.flab.tess.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flab.tess.util.BaseEntity;
 import lombok.*;
 
@@ -24,6 +26,7 @@ public class Account extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("accountList") // User의 accountList를 직렬화에서 제외
     private User user;
 
     @Column(name = "account_num")
@@ -40,10 +43,12 @@ public class Account extends BaseEntity {
 
     //하나의 계좌는 여러개의 계좌내역을 가짐
     @OneToMany(mappedBy = "receiverAccountId", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Transaction> receiveList = new ArrayList<Transaction>();
 
     //하나의 계좌는 여러개의 계좌내역을 가짐
     @OneToMany(mappedBy = "senderAccountId", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Transaction> sendList = new ArrayList<Transaction>();
 
     //잔액 초기값 0원

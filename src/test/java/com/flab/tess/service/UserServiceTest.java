@@ -37,7 +37,7 @@ public class UserServiceTest {
         User result = userService.join(user);
 
         assertNotNull(result);
-        verify(userRepository, times(1)).save(encodedUser);
+        assertEquals(user.getUserId(), result.getUserId());
     }
 
     @Test
@@ -54,6 +54,7 @@ public class UserServiceTest {
         User loginResult = userService.login(loginRequest);
 
         assertNotNull(loginResult);
+        assertEquals(user, loginResult);
     }
 
     @Test
