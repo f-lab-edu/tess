@@ -25,17 +25,13 @@ import java.util.stream.Collectors;
 public class AccountController {
 
     private final AccountService accountService;
-    //    private final UserService userService;
     private final CustomUserDetailService customUserDetailService;
 
     //(1)
     @GetMapping
     public List<AccountResponse> getAccounts(Principal principal) {
         User user = customUserDetailService.findUser(principal);
-        List<Account> accounts = accountService.getAccounts(user);
-        return accounts.stream()
-                .map(AccountResponse::from)
-                .collect(Collectors.toList());
+        return accountService.getCachedAccountResponses(user);
     }
 
     //(2)

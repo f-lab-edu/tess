@@ -1,5 +1,7 @@
 package com.flab.tess.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flab.tess.domain.Account;
 import com.flab.tess.util.CurrencyFormatter;
 import lombok.Builder;
@@ -19,6 +21,16 @@ public class AccountResponse {
     private final String accountName;
     private final String accountType;
     private final String balance;
+
+    //Json 데이터 객체로 변환
+    @JsonCreator
+    public static AccountResponse create(@JsonProperty("accountId") BigInteger accountId,
+                                         @JsonProperty("accountNum") String accountNum,
+                                         @JsonProperty("accountName") String accountName,
+                                         @JsonProperty("accountType") String accountType,
+                                         @JsonProperty("balance") String balance) {
+        return new AccountResponse(accountId, accountNum, accountName, accountType, balance);
+    }
 
     public static AccountResponse from(Account account){
         return AccountResponse.builder()
