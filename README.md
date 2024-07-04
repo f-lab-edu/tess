@@ -10,7 +10,8 @@ java -jar tess-0.0.1-SNAPSHOT.jar
 ```
 
 ## REST DOCS
-[REST DOCS](localhost:8080/docs/index.html/)
+build 파일 실행 후
+localhost:8080/docs/index.html
 
 ## **사용기술**
 
