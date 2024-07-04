@@ -15,9 +15,9 @@ localhost:8080/docs/index.html
 
 ## **사용기술**
 
-Java 11
-Spring Boot 2.7.2
-MySQL 8.0
+Java 11 <br/>
+Spring Boot 2.7.2 <br/>
+MySQL 8.0 <br/>
 
 ## **DB ERD**
 
