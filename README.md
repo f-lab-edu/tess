@@ -15,8 +15,16 @@ localhost:8080/docs/index.html
 
 ## **사용기술**
 
+Java 11
+Spring Boot 2.7.2
+MySQL 8.0
+
 ## **DB ERD**
 
+<img width="643" alt="tess_erd" src="https://github.com/f-lab-edu/tess/assets/65644373/f6c849ea-573a-452c-a2ca-072c57f05d45">
+
 ## **테스트 커버리지 측정**
+
+<img width="1272" alt="테스트 커버리지 70" src="https://github.com/f-lab-edu/tess/assets/65644373/c4f44906-6d7a-4f24-a7ef-535c850f2d3c">
 
 ## **성능테스트**
