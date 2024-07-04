@@ -121,12 +121,13 @@ jacocoTestReport {
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, excludes: [
-					'**/dto',
-					'**/filter',
-					'**/util',
-					'**/config',
-					'**/provider',
-					'**/service'
+					'**/*Dto*',
+					'**/*Request*',
+					'**/*Response*',
+					'**/*Filter*',
+					'**/*Config*',
+					'**/*Provider*',
+					'**/*TessApplication*'
 			])
 		}))
 	}
@@ -140,19 +141,20 @@ jacocoTestCoverageVerification {
 
 			// 제외할 클래스들
 			excludes = [
-					'**/dto',
-					'**/filter',
-					'**/util',
-					'**/config',
-					'**/provider',
-					'**/service'
+					'**.*Dto*',
+					'**.*Request*',
+					'**.*Response*',
+					'**.*Filter*',
+					'**.*Config*',
+					'**.*Provider*',
+					'**.*TessApplication*'
 			]
 
 			// 브랜치 커버리지의 최소값을 설정합니다.
 			limit {
 				counter = 'BRANCH'
 				value = 'COVEREDRATIO'
-				minimum = 0.50
+				minimum = 0.70
 			}
 		}
 	}
