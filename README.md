@@ -9,12 +9,13 @@ java -jar tess-0.0.1-SNAPSHOT.jar
 ```
 
 ## REST DOCS
+<hr/>
 [REST DOCS](localhost:8080/docs/index.html)
 
-## **사용기술*
+## **사용기술**
 
-## **DB ERD*
+## **DB ERD**
 
-## **테스트 커버리지 측정*
+## **테스트 커버리지 측정**
 
-## **성능테스트*
+## **성능테스트**
