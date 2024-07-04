@@ -43,3 +43,19 @@ include::{snippets}/get-transaction-account/http-response.adoc[]
 
 === Response field
 include::{snippets}/get-transaction-account/response-fields.adoc[]
+
+
+== 최근 송금 목록 조회 API
+
+=== HTTP Request
+include::{snippets}/get-recent-withdraw/http-request.adoc[]
+
+=== HTTP Request Parameters
+===== Path Parameters
+include::{snippets}/get-recent-withdraw/path-parameters.adoc[]
+
+=== HTTP Response Body
+include::{snippets}/get-recent-withdraw/http-response.adoc[]
+
+=== Response field
+include::{snippets}/get-recent-withdraw/response-fields.adoc[]
