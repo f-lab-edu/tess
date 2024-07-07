@@ -73,7 +73,40 @@ public class TransactionControllerTest extends RestDocsTest {
     }
 
     @Test
-    void 거래_내역_상세_조회() throws Exception{
+    void 거래_내역_상세_조회_받는_사람() throws Exception {
+
+        //given
+        given(customUserDetailService.findUser(any(Principal.class))).willReturn(testUser);
+        Transaction mockTransaction = createTransactions().get(1); // withdraw transaction
+        given(transactionService.getTransaction(BigInteger.valueOf(2))).willReturn(mockTransaction);
+
+        //when & then
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .get("/transactions/{transactionId}", 2)
+                .principal(mockPrincipal))
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                //문서화
+                .andDo(document("get-transaction-one",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(parameterWithName("transactionId").description("거래 내역 ID")),
+                        responseFields(
+                                fieldWithPath("transactionId").description("거래 내역 ID").type(JsonFieldType.NUMBER).optional(),
+                                fieldWithPath("amount").description("거래 금액").type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("transactionAt").description("거래 일시").type(JsonFieldType.ARRAY).optional(),
+                                fieldWithPath("transactionType").description("거래 타입").type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("userInfo.accountName").description("user 계좌명").type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("userInfo.accountNum").description("user 계좌 번호").type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("userInfo.balance").description("거래 후 계좌 잔액").type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("otherAccountName").description("거래 상대 계좌명").type(JsonFieldType.STRING).optional()
+                        )));
+    }
+
+
+    @Test
+    void 거래_내역_상세_조회_보낸_사람() throws Exception{
 
         //given
         given(customUserDetailService.findUser(any(Principal.class))).willReturn(testUser);
@@ -181,7 +214,7 @@ public class TransactionControllerTest extends RestDocsTest {
                 .accountNum("123")
                 .accountName("상대방 계좌")
                 .balance(BigDecimal.valueOf(12000))
-                .user(otherUser )
+                .user(otherUser)
                 .build();
 
         Transaction depositTransaction = Transaction.builder()
@@ -205,7 +238,22 @@ public class TransactionControllerTest extends RestDocsTest {
                 .receiverBalance(userAccount.getBalance().add(BigDecimal.valueOf(2000)))
                 .build();
 
-        return List.of(depositTransaction, withdrawTransaction);
+
+        //mock
+        Account spyUserAccount = spy(userAccount);
+        Account spyOtherAccount = spy(otherAccount);
+        User spyOtherUser = spy(otherUser);
+
+        doReturn(testUser).when(spyUserAccount).getUser();
+        doReturn(spyOtherUser).when(spyOtherAccount).getUser();
+
+        Transaction spyDeposit = spy(depositTransaction);
+        Transaction spyWithdraw = spy(withdrawTransaction);
+
+        doReturn(spyUserAccount).when(spyDeposit).getSenderAccountId();
+        doReturn(spyUserAccount).when(spyWithdraw).getReceiverAccountId();
+
+        return List.of(spyDeposit, spyWithdraw);
     };
 
 

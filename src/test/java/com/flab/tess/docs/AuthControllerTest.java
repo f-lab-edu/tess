@@ -8,20 +8,11 @@ import com.flab.tess.dto.UserDto;
 import com.flab.tess.provider.JwtTokenProvider;
 import com.flab.tess.service.CustomUserDetailService;
 import com.flab.tess.service.UserService;
-import com.mysql.cj.log.Log;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.http.MediaType;
 
 import java.math.BigInteger;
-import java.security.Principal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -49,7 +40,7 @@ public class AuthControllerTest extends RestDocsTest{
 
         //given
         JoinRequest joinRequestTest = new JoinRequest("유정", "testLoginId", "1234");
-        given(userService.join(any(JoinRequest.class))).willReturn(testUser);
+        given(userService.join(any(User.class))).willReturn(testUser);
 
         // When & Then
         mockMvc.perform(post("/auth/join")
@@ -70,8 +61,8 @@ public class AuthControllerTest extends RestDocsTest{
     @Test
     void 유저_정보_조회() throws Exception{
 
-        given(customUserDetailService.findUser(mockPrincipal)).willReturn(testUser);
-        given(userService.getUserInfo(testUser.getUserId())).willReturn(testUser);
+        UserDto mockUserDto = new UserDto(BigInteger.valueOf(1), "testUser", "Test User");
+        given(customUserDetailService.getCachedUserDto(mockPrincipal)).willReturn(mockUserDto);
 
         //when & then
         this.mockMvc.perform(

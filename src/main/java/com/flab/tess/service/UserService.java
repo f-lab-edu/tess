@@ -13,9 +13,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User join(JoinRequest joinRequest){
+    public User join(User user){
 
-        User user = joinRequest.toEntity();
         User encodeUser = user.encodePassword();
         user = userRepository.save(encodeUser);
 
