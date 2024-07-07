@@ -33,7 +33,7 @@ MySQL 8.0 <br/>
 100명, 1000명의 user가 동시접속 할 때를 가정하여 송금하기와 계좌전체조회하기 API에서 성능테스트를 진행했습니다. 계좌 전체조회하기에는 캐싱을 적용했습니다.
 
 
-### **1) 100명 user (캐싱 초기 적용)**
+### **1) 100명 user (캐싱 초기 적용)** - 평균 RPS 35, 실패율 5%
 
 <img width="872" alt="100명_성능테스트" src="https://github.com/f-lab-edu/tess/assets/65644373/ebf74332-bd01-4702-9e77-8ea3f99b4b99">
 
@@ -50,7 +50,7 @@ cf) 성능 테스트 하면서 캐싱 적용 <br/>
 
 <br/>
 
-### **1) 1000명 user**
+### **2) 1000명 user** - 평균 RPS 160, 실패율 30 %
 
 <img width="867" alt="1000명 성능테스트2" src="https://github.com/f-lab-edu/tess/assets/65644373/80bdbcc2-82b2-4e8f-97be-7fdab61f0ba9">
 
