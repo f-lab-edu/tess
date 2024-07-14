@@ -25,7 +25,7 @@ MySQL 8.0 <br/>
 
 ## **테스트 커버리지 측정**
 
-<img width="1272" alt="테스트 커버리지 70" src="https://github.com/f-lab-edu/tess/assets/65644373/c4f44906-6d7a-4f24-a7ef-535c850f2d3c">
+<img width="779" alt="테스트커버리지" src="https://github.com/user-attachments/assets/7e336176-c6a4-46f5-8b6d-6dc97c095fe1">
 
 
 ## **캐싱 & 성능테스트**
