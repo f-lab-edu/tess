@@ -14,14 +14,15 @@ public abstract class BaseEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    // createdAt 필드를 현재 시간으로 설정
 
+    // createdAt, updateAt필드를 현재 시간으로 설정
     @PrePersist
     public void createdAt() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = createdAt;
     }
 
-    //  pdatedAt 필드를 현재 시간으로 설정
+    // updatedAt 필드를 현재 시간으로 설정
     @PreUpdate
     public void updatedAt() {
         this.updatedAt = LocalDateTime.now();
