@@ -31,35 +31,36 @@ MySQL 8.0 <br/>
 ## **캐싱 & 성능테스트**
 
 100명, 1000명의 user가 동시접속 할 때를 가정하여 송금하기와 계좌전체조회하기 API에서 성능테스트를 진행했습니다. 계좌 전체조회하기에는 캐싱을 적용했습니다.
+<br/>
 
+초기 테스트에서 100명일 때 5%, 1000명일 때 30%였던 실패율을 예외처리 후 0%로 감소시켰습니다.
 
-### **1) 100명 user (캐싱 초기 적용)** - 평균 RPS 35, 실패율 5%
-
+### **0) 초기 테스트 때의 실패율 그래프  -> 예외처리 후 0% 실패율로 감소 (1,2 그래프)**
 <img width="872" alt="100명_성능테스트" src="https://github.com/f-lab-edu/tess/assets/65644373/ebf74332-bd01-4702-9e77-8ea3f99b4b99">
-
-<br/>
-
-
-cf) 성능 테스트 하면서 캐싱 적용 <br/>
-<img width="247" alt="계좌전체조회_캐싱" src="https://github.com/f-lab-edu/tess/assets/65644373/e83464ca-3d33-470a-add8-4ad70236b4b8">
-
-<br/>
-초당 요청수(RPS)는 평균 약 35이고, 100명까지는 요청에 대한 실패율이 거의 없으며, 응답시간이 약 30ms에서 안정적으로 유지됩니다.
-계좌 전체조회하기에 대한 캐싱이 적용되면서 응답시간이 감소했습니다.
-
-
-<br/>
-
-### **2) 1000명 user** - 평균 RPS 160, 실패율 30 %
 
 <img width="867" alt="1000명 성능테스트2" src="https://github.com/f-lab-edu/tess/assets/65644373/80bdbcc2-82b2-4e8f-97be-7fdab61f0ba9">
 
+### **1) 100명 user (캐싱 초기 적용)** - 평균 RPS 33.9
+<img width="894" alt="100명 성능" src="https://github.com/user-attachments/assets/130b4b83-9749-41f7-bf84-2d0c1ca0e7d4">
+
 <br/>
 
-초당 요청수(RPS)는 평균적으로 약 160이고, 유저가 6~700명을 넘어갈 때부터 실패율이 계속해서 증가합니다. 
+cf) 성능 테스트 하면서 캐싱 적용 <br/>
+<img width="181" alt="캐시적용ㅇ" src="https://github.com/user-attachments/assets/b6a0a16b-61fe-4160-bf54-bb29b41acc7f">
+<br/>
+
+초당 요청수(RPS)는 평균 약 33.9이고, 응답시간이 약 30ms 이하로 안정적으로 유지됩니다.
+계좌 전체조회하기에 대한 캐싱이 적용 후, 테스트 API에 대한 95% 응답시간의 최대값이 87ms에서 20ms정도로 급격히 감소했습니다.
+
 
 <br/>
 
-<img width="865" alt="700명 이상일때 부터 급격한 성능저하" src="https://github.com/f-lab-edu/tess/assets/65644373/de80a9ea-29dd-459a-ae89-52a1b74cb856">
+### **2) 1000명 user** - 평균 RPS 304
 
-700명인 시점에, 100명일 때의 35RPS보다 5배 이상 증가한 192 RPS를 처리하면서, 실패율이 급격하게 상승했습니다.
+<img width="917" alt="240729 성능 1000명" src="https://github.com/user-attachments/assets/5e7f37ba-3d96-4a6d-b8f9-65e4db2bc363">
+
+<br/>
+
+초당 요청수(RPS)는 평균적으로 약 304입니다. 평균 응답 시간은 100ms 이하로 유지됩니다.
+
+<br/>
