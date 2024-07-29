@@ -2,22 +2,17 @@ package com.flab.tess.service;
 
 import com.flab.tess.domain.Account;
 import com.flab.tess.domain.Transaction;
-import com.flab.tess.domain.User;
 import com.flab.tess.dto.*;
 import com.flab.tess.repository.AccountRepository;
 import com.flab.tess.repository.TransactionRepository;
-import com.flab.tess.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +35,10 @@ public class TransactionService {
         //보내는 사람 계좌 조회
         Account sendAccount = accountRepository.findById(sender)
                 .orElseThrow(() -> new IllegalArgumentException("송신 계좌가 존재하지 않습니다."));
+
+        if(receiveAccount.equals(sendAccount)){
+            throw new IllegalArgumentException("송신 계좌와 수신 계좌가 같습니다.");
+        }
 
         //받는 사람, 보내는 사람 계좌 잔액 업데이트
         Account proceedReceiveAccount = receiveAccount.deposit(amount);
